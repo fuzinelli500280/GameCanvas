@@ -10,17 +10,16 @@ backgroundImage.src = 'images/background.jpg';
 let playerImage = new Image();
 playerImage.src = 'images/character.png';
 
-// Carregar a imagem do 
+// Carregar a imagem das plataformas
 let platformImage = new Image();
-platformImage.src = 'images/kauagay.png';
-
+platformImage.src = 'images/platform.png';
 
 // Variáveis do jogo
 let player = {
     x: 100,
     y: 100,
-    width: 100,
-    height: 100,
+    width: 120,
+    height: 140,
     velocityX: 0,
     velocityY: 0,
     speed: 5,
@@ -32,9 +31,8 @@ let friction = 0.9;
 
 // Plataformas
 let platforms = [
-    { x: 20, y: 550, width: 400, height: 10},
-    { x: 100, y: 450, width: 200, height: 10},
-    { x: 500, y: 350, width: 280, height: 10},
+    { x: 10, y: 310, width: 100, height: 100},
+    { x: 200, y: 310, width: 100, height: 100},
 ];
 
 // Controles do jogador
@@ -66,18 +64,18 @@ function drawBackground() {
     }
 }
 
-
-
+// Desenhar as plataformas
 function drawPlatform() {
-    if (platformImage.complete) { // Verifica se a imagem foi carregada
-        ctx.drawImage(platformImage, 0, 0, canvas.width, canvas.height);
-    } else {
-        // Se a imagem não estiver carregada, desenha um fundo de cor sólida como fallback
-        ctx.fillStyle = '#000'; // Cor de fundo preta
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }
+    platforms.forEach(platform => {
+        if (platformImage.complete) { // Verifica se a imagem foi carregada
+            ctx.drawImage(platformImage, platform.x, platform.y, platform.width, platform.height);
+        } else {
+            // Se a imagem não estiver carregada, desenha um retângulo azul como fallback
+            ctx.fillStyle = 'blue';
+            ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+        }
+    });
 }
-
 
 // Atualizações do jogo
 function updateGame() {
@@ -113,6 +111,9 @@ function updateGame() {
         }
     });
 
+    // Desenhar as plataformas
+    drawPlatform();
+
     // Desenhar o jogador usando a imagem
     if (playerImage.complete) { // Verifica se a imagem foi carregada
         ctx.drawImage(playerImage, player.x, player.y, player.width, player.height);
@@ -121,12 +122,6 @@ function updateGame() {
         ctx.fillStyle = 'red';
         ctx.fillRect(player.x, player.y, player.width, player.height);
     }
-
-    // Desenhar as plataformas
-    platforms.forEach(platform => {
-        ctx.fillStyle = 'blue';
-        ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
-    });
 
     requestAnimationFrame(updateGame);
 }
